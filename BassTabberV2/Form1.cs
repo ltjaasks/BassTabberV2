@@ -12,6 +12,9 @@ using System.Globalization;
 
 namespace BassTabberV2
 {
+    
+    /// Credit to NWaves and NAudio and their creators for the tools for working with audio and digital signal processing
+    
     public partial class BassTabber : Form
     {
         WaveFileWriter writer = null;
@@ -38,7 +41,7 @@ namespace BassTabberV2
         {
             InitializeComponent();
 
-            /// Alustetaan kieli‰ kuvaava tabSb[]
+            /// Alustetaan kieli√§ kuvaava tabSb[]
             for (int i = 0; i < tabSb.Length; i++)
             {
                 tabSb[i] = new StringBuilder("");
@@ -49,12 +52,12 @@ namespace BassTabberV2
             Directory.CreateDirectory(kansio);
             tiedosto = Path.Combine(kansio, "recorded.wav");
 
-            /// Luodaan ‰‰nilaite
+            /// Luodaan √§√§nilaite
             aaniIn = new WaveInEvent();
 
             bool closing = false;
 
-            /// Tapahtumank‰sittelij‰ ‰‰nilaitteelle
+            /// Tapahtumank√§sittelij√§ √§√§nilaitteelle
             aaniIn.DataAvailable += (s, a) =>
             {
                 writer.Write(a.Buffer, 0, a.BytesRecorded);
@@ -111,7 +114,7 @@ namespace BassTabberV2
 
 
         /// <summary>
-        /// Kirjoittaa tabin n‰kyville tab-kentt‰‰n tabSb StringBuilder taulukosta
+        /// Kirjoittaa tabin n√§kyville tab-kentt√§√§n tabSb StringBuilder taulukosta
         /// </summary>
         private void kirjoitaTab()
         {
@@ -133,10 +136,10 @@ namespace BassTabberV2
 
 
         /// <summary>
-        /// Placeholder tiivist‰j‰, jotta ohjelman toimintaa voi n‰ytt‰‰
-        /// Tiivist‰‰ taajuudet, ottamalla taulukosta, joka 10. luvun, jotta tuotettu tab on luettavampi
-        /// TO:DO parempi toteutus. Otetaan taajuudet taulukosta ‰‰nien keskiarvotaajuus ja korvataan pitk‰kestoiset ‰‰net yhdell‰ luvulla.
-        /// Tiivistet‰‰n nollien m‰‰r‰‰, kuitenkin s‰ilytt‰en taukojen oikeat pituudet suhteessa. Tarkoituksena saada tabist‰ lyhyempi ja poistaa toistuvat luvut
+        /// Placeholder tiivist√§j√§, jotta ohjelman toimintaa voi n√§ytt√§√§
+        /// Tiivist√§√§ taajuudet, ottamalla taulukosta, joka 10. luvun, jotta tuotettu tab on luettavampi
+        /// TO:DO parempi toteutus. Otetaan taajuudet taulukosta √§√§nien keskiarvotaajuus ja korvataan pitk√§kestoiset √§√§net yhdell√§ luvulla.
+        /// Tiivistet√§√§n nollien m√§√§r√§√§, kuitenkin s√§ilytt√§en taukojen oikeat pituudet suhteessa. Tarkoituksena saada tabist√§ lyhyempi ja poistaa toistuvat luvut
         /// </summary>
         private void tiivistaTaajuudet()
         {
@@ -151,7 +154,7 @@ namespace BassTabberV2
         /// <summary>
         /// Kirjoittaa tabia tabSb[] StringBuilder -taulukkoon
         /// </summary>
-        /// <param name="taajuus">taajuus, jota vastaava v‰li etsit‰‰n oteLauta -taulukosta</param>
+        /// <param name="taajuus">taajuus, jota vastaava v√§li etsit√§√§n oteLauta -taulukosta</param>
         private void kirjoitaIsku(double taajuus)
         {
             if (taajuus == 0)
@@ -160,7 +163,7 @@ namespace BassTabberV2
                 return;
             }
 
-            /// Etsit‰‰n taajuutta vastaava v‰li otelaudalta
+            /// Etsit√§√§n taajuutta vastaava v√§li otelaudalta
             for (int i = 0; i < oteLauta[0].Length; i++)
             {
                 for (int j = 0; j < oteLauta.Length; j++)
@@ -171,13 +174,13 @@ namespace BassTabberV2
                         lisaaTyhjat(j);
                         return;
                     }
-                    if (oteLauta[j][i] < taajuus && taajuus < oteLauta[j][i + 1]) /// Lis‰t‰‰n oikea v‰li oikealle kielelle
+                    if (oteLauta[j][i] < taajuus && taajuus < oteLauta[j][i + 1]) /// Lis√§t√§√§n oikea v√§li oikealle kielelle
                     {
                         if (etsiLahempi(oteLauta[j][i + 1], oteLauta[j][i], taajuus))
                             tabSb[j].Append(i);
                         else
                             tabSb[j].Append(i + 1);
-                        lisaaTyhjat(j); /// Lis‰t‰‰n muihin kieliin "ó". Aliohjelmana liian nestingin v‰ltt‰miseksi
+                        lisaaTyhjat(j); /// Lis√§t√§√§n muihin kieliin "‚Äî". Aliohjelmana liian nestingin v√§ltt√§miseksi
                         return;
                     }
                 }
@@ -186,28 +189,28 @@ namespace BassTabberV2
 
 
         /// <summary>
-        /// Lis‰‰ "ó" tabSb StringBuildereihin, kuin tabSb[eiLis‰t‰]. Voidaan antaa parametriksi esim -1 jos halutaan lis‰t‰ kaikkiin
+        /// Lis√§√§ "‚Äî" tabSb StringBuildereihin, kuin tabSb[eiLis√§t√§]. Voidaan antaa parametriksi esim -1 jos halutaan lis√§t√§ kaikkiin
         /// </summary>
-        /// <param name="eiLisata">StringBuilder, johon ei lis‰t‰ "ó"</param>
+        /// <param name="eiLisata">StringBuilder, johon ei lis√§t√§ "‚Äî"</param>
         private void lisaaTyhjat(int eiLisata)
         {
             for (int i = 0; i < tabSb.Length; i++)
             {
                 if (i != eiLisata)
                 {
-                    tabSb[i].Append("ó");
+                    tabSb[i].Append("‚Äî");
                 }
             }
         }
 
 
         /// <summary>
-        /// Etsii taajuutta l‰hemm‰n kahdesta oteLauta-taulukon luvusta
+        /// Etsii taajuutta l√§hemm√§n kahdesta oteLauta-taulukon luvusta
         /// </summary>
         /// <param name="korkea">oteLauta-taulukon suurempi luku</param>
         /// <param name="matala">oteLauta-taulukon pienempi luku</param>
         /// <param name="taajuus">taajuus, johon verrataan</param>
-        /// <returns>true jos matala on l‰hemp‰n‰ taajuutta, false jos korkea on l‰hemp‰n‰ taajuutta</returns>
+        /// <returns>true jos matala on l√§hemp√§n√§ taajuutta, false jos korkea on l√§hemp√§n√§ taajuutta</returns>
         private static bool etsiLahempi(int korkea, int matala, double taajuus)
         {
             return Math.Abs(taajuus - matala) < Math.Abs(taajuus - korkea);
@@ -215,7 +218,7 @@ namespace BassTabberV2
 
 
         /// <summary>
-        /// Tapahtumank‰sittelij‰ start-napin painamiselle
+        /// Tapahtumank√§sittelij√§ start-napin painamiselle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -229,7 +232,7 @@ namespace BassTabberV2
 
 
         /// <summary>
-        /// Tapahtumank‰sittelij‰ stop-napin painamiselle
+        /// Tapahtumank√§sittelij√§ stop-napin painamiselle
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
