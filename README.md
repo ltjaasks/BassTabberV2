@@ -5,3 +5,5 @@ ja NWaves kirjastoa (https://github.com/ar1st0crat/NWaves) digital signal proces
 saadaan äänitiedostosta soitetut taajuudet.
 
 Äänitiedoston taajuudet tallennetaan taulukkoon, jota käsitellään ja taajuudet muutetaan tabeiksi.
+
+Ohjelman toiminnallisuudet: https://github.com/ltjaasks/BassTabberV2/blob/master/BassTabberV2/Form1.cs
