@@ -12,6 +12,7 @@ using System.Globalization;
 
 namespace BassTabberV2
 {
+    ///TODO äänilaitteen valinta, testitiedostoon tallentaminen, toisto pois tabeista, ehkä tekstitiedoston muuntaminen ääneksi
     
     /// Credit to NWaves and NAudio and their creators for the tools for working with audio and digital signal processing
     
@@ -77,6 +78,7 @@ namespace BassTabberV2
                 }
             };
 
+            /// Varmistaa että äänittäminen päättyy jos ikkuna suljetaan
             FormClosing += (s, a) =>
             {
                 closing = true;
@@ -88,10 +90,10 @@ namespace BassTabberV2
         /// <summary>
         /// Laskee taajuudet luodun PitchExtractorin avulla ja asettaa ne taulukkoon taajuudet
         /// </summary>
-        private void laskeTaajuudet()
+        private void LaskeTaajuudet()
         {
             WaveFileReader wf = new WaveFileReader(tiedosto);
-            int tiedostonPituus = wf.TotalTime.Seconds;
+            ///int tiedostonPituus = wf.TotalTime.Seconds;
 
             var opts = new PitchOptions
             {
@@ -109,19 +111,19 @@ namespace BassTabberV2
                 taajuudet[i] = taajuudetVali[i][0];
                 taajuudet[i] = Math.Round(taajuudet[i]);
             }
-            tiivistaTaajuudet();
+            TiivistaTaajuudet();
         }
 
 
         /// <summary>
         /// Kirjoittaa tabin näkyville tab-kenttään tabSb StringBuilder taulukosta
         /// </summary>
-        private void kirjoitaTab()
+        private void KirjoitaTab()
         {
             for (int i = 0; i < tiivistetytTaajuudet.Length; i++)
             {
                 //tab.AppendText(tiivistetytTaajuudet[i].ToString() + " ");
-                kirjoitaIsku(tiivistetytTaajuudet[i]);
+                KirjoitaIsku(tiivistetytTaajuudet[i]);
             }
             
             for (int i = 0; i < tabSb[0].Length - 40; i += 40)
@@ -141,7 +143,7 @@ namespace BassTabberV2
         /// TO:DO parempi toteutus. Otetaan taajuudet taulukosta äänien keskiarvotaajuus ja korvataan pitkäkestoiset äänet yhdellä luvulla.
         /// Tiivistetään nollien määrää, kuitenkin säilyttäen taukojen oikeat pituudet suhteessa. Tarkoituksena saada tabistä lyhyempi ja poistaa toistuvat luvut
         /// </summary>
-        private void tiivistaTaajuudet()
+        private void TiivistaTaajuudet()
         {
             tiivistetytTaajuudet = new double[taajuudet.Length / 10];
             for (int i = 0; i < tiivistetytTaajuudet.Length; i++)
@@ -155,11 +157,11 @@ namespace BassTabberV2
         /// Kirjoittaa tabia tabSb[] StringBuilder -taulukkoon
         /// </summary>
         /// <param name="taajuus">taajuus, jota vastaava väli etsitään oteLauta -taulukosta</param>
-        private void kirjoitaIsku(double taajuus)
+        private void KirjoitaIsku(double taajuus)
         {
             if (taajuus == 0)
             {
-                lisaaTyhjat(-1);
+                LisaaTyhjat(-1);
                 return;
             }
 
@@ -171,20 +173,21 @@ namespace BassTabberV2
                     if (taajuus == oteLauta[j][i])
                     {
                         tabSb[j].Append(i);
-                        lisaaTyhjat(j);
+                        LisaaTyhjat(j);
                         return;
                     }
                     if (oteLauta[j][i] < taajuus && taajuus < oteLauta[j][i + 1]) /// Lisätään oikea väli oikealle kielelle
                     {
-                        if (etsiLahempi(oteLauta[j][i + 1], oteLauta[j][i], taajuus))
+                        if (EtsiLahempi(oteLauta[j][i + 1], oteLauta[j][i], taajuus))
                             tabSb[j].Append(i);
                         else
                             tabSb[j].Append(i + 1);
-                        lisaaTyhjat(j); /// Lisätään muihin kieliin "—". Aliohjelmana liian nestingin välttämiseksi
+                        LisaaTyhjat(j); /// Lisätään muihin kieliin "—". Aliohjelmana liian nestingin välttämiseksi
                         return;
                     }
                 }
             }
+            LisaaTyhjat(-1);
         }
 
 
@@ -192,7 +195,7 @@ namespace BassTabberV2
         /// Lisää "—" tabSb StringBuildereihin, kuin tabSb[eiLisätä]. Voidaan antaa parametriksi esim -1 jos halutaan lisätä kaikkiin
         /// </summary>
         /// <param name="eiLisata">StringBuilder, johon ei lisätä "—"</param>
-        private void lisaaTyhjat(int eiLisata)
+        private void LisaaTyhjat(int eiLisata)
         {
             for (int i = 0; i < tabSb.Length; i++)
             {
@@ -211,7 +214,7 @@ namespace BassTabberV2
         /// <param name="matala">oteLauta-taulukon pienempi luku</param>
         /// <param name="taajuus">taajuus, johon verrataan</param>
         /// <returns>true jos matala on lähempänä taajuutta, false jos korkea on lähempänä taajuutta</returns>
-        private static bool etsiLahempi(int korkea, int matala, double taajuus)
+        private static bool EtsiLahempi(int korkea, int matala, double taajuus)
         {
             return Math.Abs(taajuus - matala) < Math.Abs(taajuus - korkea);
         }
@@ -222,7 +225,7 @@ namespace BassTabberV2
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void startRecording(object sender, EventArgs e)
+        private void StartRecordingButton(object sender, EventArgs e)
         {
             tab.Clear();
             tab.AppendText("Recording... Click stop for tab");
@@ -236,7 +239,7 @@ namespace BassTabberV2
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void stopRecording(object sender, EventArgs e)
+        private void StopRecordingButton(object sender, EventArgs e)
         {
             tab.Clear();
             aaniIn.StopRecording();
@@ -248,8 +251,8 @@ namespace BassTabberV2
                 var waveFile = new WaveFile(stream);
                 signal = waveFile[Channels.Left];
             }
-            laskeTaajuudet();
-            kirjoitaTab();
+            LaskeTaajuudet();
+            KirjoitaTab();
         }
     }
 }

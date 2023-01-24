@@ -12,8 +12,8 @@
       }
     ],
     "additionalProbingPaths": [
-      "C:\\Users\\Lauri\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\Lauri\\.nuget\\packages"
+      "C:\\Users\\latej\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\latej\\.nuget\\packages"
     ],
     "configProperties": {
       "Microsoft.NETCore.DotNetHostPolicy.SetAppPaths": true

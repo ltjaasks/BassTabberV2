@@ -41,7 +41,7 @@
             this.start.TabIndex = 0;
             this.start.Text = "Start";
             this.start.UseVisualStyleBackColor = true;
-            this.start.Click += new System.EventHandler(this.startRecording);
+            this.start.Click += new System.EventHandler(this.StartRecordingButton);
             // 
             // stop
             // 
@@ -51,7 +51,7 @@
             this.stop.TabIndex = 1;
             this.stop.Text = "Stop";
             this.stop.UseVisualStyleBackColor = true;
-            this.stop.Click += new System.EventHandler(this.stopRecording);
+            this.stop.Click += new System.EventHandler(this.StopRecordingButton);
             // 
             // tab
             // 
